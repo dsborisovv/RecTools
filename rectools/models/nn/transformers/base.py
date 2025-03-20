@@ -492,8 +492,8 @@ class TransformerModelBase(ModelBase[TransformerModelConfig_T]):  # pylint: disa
                 value = getattr(self, attr)
                 print(value)
                 print()
-                if isinstance(value, dgl.heterograph.DGLGraph):
-                    continue
+                # if isinstance(value, dgl.heterograph.DGLGraph):
+                #     continue
                 params[attr] = value
         params = {attr: getattr(self, attr) for attr in attrs if attr != "cls"}
         params["cls"] = self.__class__
