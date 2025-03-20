@@ -146,7 +146,7 @@ class ModelBase(tp.Generic[ModelConfig_T]):
 
         pydantic_mode = "json" if simple_types else "python"
         try:
-            config_dict = config.model_dump(mode=pydantic_mode)
+            config_dict = config.model_dump(mode=pydantic_mode, exclude={"item_adj_graph", "item_sim_graph"})
         except PydanticSerializationError as e:
             if e.__cause__ is not None:
                 raise e.__cause__
