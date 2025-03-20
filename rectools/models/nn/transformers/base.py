@@ -24,7 +24,7 @@ import torch
 import typing_extensions as tpe
 from pydantic import BeforeValidator, PlainSerializer
 from pytorch_lightning import Trainer
-import dgl
+from dgl.heterograph import DGLGraph
 
 from rectools import ExternalIds
 from rectools.dataset.dataset import Dataset, DatasetSchema, DatasetSchemaDict, IdMap
@@ -488,7 +488,7 @@ class TransformerModelBase(ModelBase[TransformerModelConfig_T]):  # pylint: disa
                 params["cls"] = self.__class__
             else:
                 value = getattr(self, attr)
-                if not isinstance(value, (dgl.heterograph.DGLGraph,)):
+                if not isinstance(value, DGLGraph):
                     params[attr] = value
         params = {attr: getattr(self, attr) for attr in attrs if attr != "cls"}
         return self.config_class(**params)
