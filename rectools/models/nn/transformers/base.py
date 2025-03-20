@@ -24,6 +24,7 @@ import torch
 import typing_extensions as tpe
 from pydantic import BeforeValidator, PlainSerializer
 from pytorch_lightning import Trainer
+import dgl
 
 from rectools import ExternalIds
 from rectools.dataset.dataset import Dataset, DatasetSchema, DatasetSchemaDict, IdMap
@@ -479,8 +480,18 @@ class TransformerModelBase(ModelBase[TransformerModelConfig_T]):  # pylint: disa
 
     def _get_config(self) -> TransformerModelConfig_T:
         attrs = self.config_class.model_json_schema(mode="serialization")["properties"].keys()
-        params = {attr: getattr(self, attr) for attr in attrs if attr != "cls"}
-        params["cls"] = self.__class__
+
+        params = {}
+        for attr in attrs:
+            if attr == "cls":
+                params["cls"] = self.__class__
+            else:
+                value = getattr(self, attr)
+                if isinstance(value, dgl.DGLGraph):
+                    continue
+                params[attr] = value
+        # params = {attr: getattr(self, attr) for attr in attrs if attr != "cls"}
+        # params["cls"] = self.__class__
         return self.config_class(**params)
 
     @classmethod
