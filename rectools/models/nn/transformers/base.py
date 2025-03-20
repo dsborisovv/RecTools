@@ -481,22 +481,22 @@ class TransformerModelBase(ModelBase[TransformerModelConfig_T]):  # pylint: disa
     def _get_config(self) -> TransformerModelConfig_T:
         attrs = self.config_class.model_json_schema(mode="serialization")["properties"].keys()
 
-        exclude_attrs = {"cls", "item_adj_graph", "item_sim_graph"}
 
-        params = {attr: getattr(self, attr) for attr in attrs if attr not in exclude_attrs}
+        params = {}
+        for attr in attrs:
+            print(attr)
+            print(type(attr))
+            if attr == "cls":
+                params["cls"] = self.__class__
+            else:
+                value = getattr(self, attr)
+                print(value)
+                print()
+                if isinstance(value, dgl.heterograph.DGLGraph):
+                    continue
+                params[attr] = value
+        params = {attr: getattr(self, attr) for attr in attrs if attr != "cls"}
         params["cls"] = self.__class__
-
-        # params = {}
-        # for attr in attrs:
-        #     if attr == "cls":
-        #         params["cls"] = self.__class__
-        #     else:
-        #         value = getattr(self, attr)
-        #         if isinstance(value, dgl.heterograph.DGLGraph):
-        #             continue
-        #         params[attr] = value
-        # params = {attr: getattr(self, attr) for attr in attrs if attr != "cls"}
-        # params["cls"] = self.__class__
         return self.config_class(**params)
 
     @classmethod
