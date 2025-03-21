@@ -483,6 +483,8 @@ class TransformerModelBase(ModelBase[TransformerModelConfig_T]):  # pylint: disa
         params = {attr: getattr(self, attr) for attr in attrs if attr != "cls"}
         params["cls"] = self.__class__
         print(params)
+        print('----')
+        print(params.keys())
         return self.config_class(**params)
 
     @classmethod
