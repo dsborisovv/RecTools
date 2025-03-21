@@ -482,9 +482,10 @@ class TransformerModelBase(ModelBase[TransformerModelConfig_T]):  # pylint: disa
         attrs = self.config_class.model_json_schema(mode="serialization")["properties"].keys()
         params = {attr: getattr(self, attr) for attr in attrs if attr != "cls"}
         params["cls"] = self.__class__
-        print(params)
-        print('----')
-        print(params.keys())
+        # print(params)
+        # print('----')
+        # print(params.keys())
+        del params["lightning_module_kwargs"]
         return self.config_class(**params)
 
     @classmethod
