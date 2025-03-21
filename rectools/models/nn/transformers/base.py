@@ -480,17 +480,9 @@ class TransformerModelBase(ModelBase[TransformerModelConfig_T]):  # pylint: disa
 
     def _get_config(self) -> TransformerModelConfig_T:
         attrs = self.config_class.model_json_schema(mode="serialization")["properties"].keys()
-
-
-        params = {}
-        for attr in attrs:
-            if attr == "cls":
-                params["cls"] = self.__class__
-            else:
-                value = getattr(self, attr)
-                if not isinstance(value, DGLGraph):
-                    params[attr] = value
         params = {attr: getattr(self, attr) for attr in attrs if attr != "cls"}
+        params["cls"] = self.__class__
+        print(params)
         return self.config_class(**params)
 
     @classmethod
